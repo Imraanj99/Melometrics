@@ -75,18 +75,16 @@ def get_all_tracks():
             track = item['track']
             val = [track['name']]
             val.append(track['artists'][0]['name'])
-
+            '''
             features=sp.audio_features([track['id']])
             if "error" in features:
                 print('this has worked',features)
                 time.sleep(5)
             val.append(features) 
-            results += [val]
             '''
+            results += [val]
         if (len(curGroup) < 50):
             break
-            '''
-        break
     
     df = pd.DataFrame(results, columns=["song names","artists"]) 
     df.to_csv('songs.csv', index=False)
@@ -148,5 +146,7 @@ def create_spotify_oauth():
     return SpotifyOAuth(
             client_id="8bde0ea3e6574d2199681fca5f885845",
             client_secret="75ad5e8dc0e941fc95d397b2214b11ed",
-            redirect_uri=url_for('auth.redir', _external=True),
-            scope="user-library-read user-read-private ")
+            # will have to be changed. try find out why url for is not working here
+            redirect_uri='http://18.171.181.89/redir',
+            #redirect_uri='url_for('auth.redir', _external=True)',
+            scope="user-library-read")
