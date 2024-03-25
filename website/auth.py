@@ -66,70 +66,123 @@ def get_all_tracks():
         return redirect('/')
     sp = spotipy.Spotify(auth=session.get('token_info').get('access_token'))
     results = []
+    identity = []
     iter = 0
     while True:
         offset = iter * 50
         iter += 1
         curGroup = sp.current_user_saved_tracks(limit=50, offset=offset)['items']
         for idx, item in enumerate(curGroup):
-            track = item['track']
-            val = [track['name']]
-            val.append(track['artists'][0]['name'])
-            '''
-            features=sp.audio_features([track['id']])
-            if "error" in features:
-                print('this has worked',features)
-                time.sleep(5)
-            val.append(features) 
-            '''
-            results += [val]
+            tracks = item['track']
+            val = [tracks['id']]
+            iden = [tracks['name']]
+            iden.append(tracks['artists'][0]['name'])
+
+            identity += [iden]
+            results += val
         if (len(curGroup) < 50):
             break
-    
-    df = pd.DataFrame(results, columns=["song names","artists"]) 
-    df.to_csv('songs.csv', index=False)
-    flash('successfully retreived tracks', category='Success')
-    return render_template('simple.html',  tables=[df.to_html(classes='data')], titles=df.columns.values)
+        if (len(results)>100):
+            break
+    features = []
+    for i in range(0,len(results),50):
+        feature=sp.audio_features(results[i:i+50])
+        features += feature
+    df2 = pd.DataFrame(features) 
+    df1 = pd.DataFrame(identity, columns=["Song","Artists"])
+    df0 = df1.join(df2)
+    df3 = df0.reset_index().rename(columns={'index': '#'})
+    df3.index = df3.index + 1
+    df = df3.drop(['key','loudness','mode','liveness','type','id','uri','track_href','analysis_url','time_signature'],axis=1)
+    #df.to_csv('songs.csv', index=False)
+    header = "Liked songs"
+    flash('Tracks retrieved successfully', category='success')
+    return render_template('table.html', table= df.to_html(classes='sortable', index=False, escape=False), title=header)
     #return redirect(url_for('auth.home', _external=True))
 
-
-#not yet used
-@auth.route('/SingleInfo')
-def get_single_track_info():
+@auth.route('top_tracks')
+def top_tracks():
     session['token_info'], authorized = get_token()
     session.modified = True
     if not authorized:
         return redirect('/')
     sp = spotipy.Spotify(auth=session.get('token_info').get('access_token'))
     results = []
-    curGroup = sp.current_user_saved_tracks(limit=1, offset=1)['items']
-    for idx, item in enumerate(curGroup):
-        track = item['track']
-        print(track['id'])
-        print(sp.audio_features(track['id']))
-        '''
-        results.append(sp.audio_features(tracks=[track['id']]))
-        print(results)
-        flash('info retreived', category='Success')
-        '''
-    return render_template('home.html')
-    '''
+    iter = 0
     while True:
         offset = iter * 50
         iter += 1
-        curGroup = sp.current_user_saved_tracks(limit=50, offset=offset)['items']
-        for idx, item in enumerate(curGroup):
-            track = item['track']
-            val = track['name'] + " - " + track['artists'][0]['name']
+        top_tracks = sp.current_user_top_tracks(limit=50, offset=offset)
+        for item in top_tracks["items"]:
+            val = [item["name"]]
+            val.append(item["artists"][0]["name"])
             results += [val]
-        if (len(curGroup) < 50):
-            break
-    
-    df = pd.DataFrame(results, columns=["song names"]) 
-    df.to_csv('songs.csv', index=False)
-    flash('successfully retreived tracks', category='Success')
-    return redirect(url_for('auth.home', _external=True))
-    '''
+        if (len(results)>99):
+            break  
+    df1 = pd.DataFrame(results, columns=["Song","Artists"])
+    df1.index = df1.index + 1
+    df = df1.reset_index().rename(columns={'index': '#'})
+    #rename later
+    specific = "(medium term)"
+    header = "Top Tracks " + specific
+    flash('Successfully retrieved your top 100 Tracks'+header, category='Success')
+    return render_template('table2.html', table= df.to_html(classes='sortable', index=False, escape=False), title=header)
+
+@auth.route('top_tracks_short')
+def top_tracks_short():
+    session['token_info'], authorized = get_token()
+    session.modified = True
+    if not authorized:
+        return redirect('/')
+    sp = spotipy.Spotify(auth=session.get('token_info').get('access_token'))
+    results = []
+    iter = 0
+    while True:
+        offset = iter * 50
+        iter += 1
+        top_tracks = sp.current_user_top_tracks(limit=50, offset=offset,time_range='short_term')
+        for item in top_tracks["items"]:
+            val = [item["name"]]
+            val.append(item["artists"][0]["name"])
+            results += [val]
+        if (len(results)>99):
+            break  
+    df1 = pd.DataFrame(results, columns=["Song","Artists"])
+    df1.index = df1.index + 1
+    df = df1.reset_index().rename(columns={'index': '#'})
+    #rename later
+    specific = "(Recent)"
+    header = "Top Tracks " + specific
+    flash('Successfully retrieved your top 100 Tracks'+header, category='Success')
+    return render_template('table2.html', table= df.to_html(classes='sortable', index=False, escape=False), title=header)
+
+@auth.route('top_tracks_long')
+def top_tracks_long():
+    session['token_info'], authorized = get_token()
+    session.modified = True
+    if not authorized:
+        return redirect('/')
+    sp = spotipy.Spotify(auth=session.get('token_info').get('access_token'))
+    results = []
+    iter = 0
+    while True:
+        offset = iter * 50
+        iter += 1
+        top_tracks = sp.current_user_top_tracks(limit=50, offset=offset,time_range='long_term')
+        for item in top_tracks["items"]:
+            val = [item["name"]]
+            val.append(item["artists"][0]["name"])
+            results += [val]
+        if (len(results)>99):
+            break  
+    df1 = pd.DataFrame(results, columns=["Song","Artists"])
+    df1.index = df1.index + 1
+    df = df1.reset_index().rename(columns={'index': '#'})
+    #rename later
+    specific = "(Long term)"
+    header = "Top Tracks " + specific
+    flash('Successfully retrieved your top 100 Tracks'+header, category='Success')
+    return render_template('table2.html', table= df.to_html(classes='sortable', index=False, escape=False), title=header)
 
 
 
@@ -147,6 +200,7 @@ def create_spotify_oauth():
             client_id="8bde0ea3e6574d2199681fca5f885845",
             client_secret="75ad5e8dc0e941fc95d397b2214b11ed",
             # will have to be changed. try find out why url for is not working here
-            redirect_uri='http://18.171.181.89/redir',
-            #redirect_uri='url_for('auth.redir', _external=True)',
-            scope="user-library-read")
+            #redirect_uri='http://18.171.181.89/redir',
+            redirect_uri='http://127.0.0.1:5001/redir',
+            #redirect_uri=url_for('auth.redir', _external=True),
+            scope="user-library-read playlist-read-private user-top-read") 
