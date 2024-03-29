@@ -1,4 +1,4 @@
-from flask import session, redirect
+from flask import session, redirect, url_for
 import spotipy
 from spotipy import SpotifyOAuth
 import time
@@ -13,7 +13,7 @@ def create_spotify_oauth():
             #redirect_uri='http://18.171.181.89/redir',
             redirect_uri='http://127.0.0.1:5001/redir',
             #redirect_uri=url_for('auth.redir', _external=True),
-            scope="user-library-read playlist-read-private user-top-read playlist-modify-public playlist-modify-private") 
+            scope="user-library-read playlist-read-private user-top-read playlist-modify-public playlist-modify-private user-read-private user-read-email") 
 
 # This function retrives the session token
 # It is able to check for an existing token, renew and expired token, or generate a new token
@@ -49,4 +49,10 @@ def check_authorised():
     if not authorized:
         return False
     return True
+
+# this function return user information
+
+def get_user():
+    sp = spotipy.Spotify(auth=session.get('token_info').get('access_token'))
+    return sp.current_user()
 

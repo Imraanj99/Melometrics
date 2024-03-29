@@ -1,7 +1,7 @@
 from flask import Blueprint, session, redirect, url_for, flash, render_template
 import spotipy
 
-from .utils import get_token
+from .utils import get_token, get_user
 
 views = Blueprint('views', __name__)
 
@@ -14,5 +14,7 @@ def home():
     if not authorised:
         flash('Please log in', category='failure')
         return redirect(url_for('auth.login'))
-    sp = spotipy.Spotify(auth=session.get('token_info').get('access_token'))
-    return render_template('home.html')
+    
+    User = get_user()
+
+    return render_template('home.html', name=User['display_name'])

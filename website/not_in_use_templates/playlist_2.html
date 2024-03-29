@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Button Selection Form</title>
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+<style>
+    /* Hide the default radio button */
+    .btn-group-toggle .btn input[type="radio"] {
+        display: none;
+    }
+    .btn-group-toggle .btn {
+        cursor: pointer;
+    }
+    .btn-group-toggle .btn input[type="radio"]:checked + .btn {
+        background-color: #007bff;
+        color: white;
+    }
+</style>
+</head>
+<body>
+
+<form method="post">
+    <div class="btn-group btn-group-toggle" data-toggle="buttons">
+        <label class="btn btn-secondary active">
+            <input type="radio" name="selected_value" value="Option1" id="option1" autocomplete="off" checked> Option 1
+        </label>
+        <label class="btn btn-secondary">
+            <input type="radio" name="selected_value" value="Option2" id="option2" autocomplete="off"> Option 2
+        </label>
+        <label class="btn btn-secondary">
+            <input type="radio" name="selected_value" value="Option3" id="option3" autocomplete="off"> Option 3
+        </label>
+    </div>
+    <br><br>
+    <button type="submit" class="btn btn-primary">Submit</button>
+</form>
+
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+</body>
+</html>
