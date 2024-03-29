@@ -1,9 +1,7 @@
 from flask import Flask, url_for
 from os import path
-#import spotipy
-#from spotipy import SpotifyOAuth
 
-
+# This function creates a Flask application and secret key. it also imports the routes and blueprints
 
 def create_app():
     app = Flask(__name__)
