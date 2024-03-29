@@ -5,6 +5,8 @@ from .utils import get_token
 
 views = Blueprint('views', __name__)
 
+# This defined the route for the home page
+
 @views.route('/')
 def home():
     session['token_info'], authorised = get_token()

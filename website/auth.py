@@ -1,6 +1,6 @@
 from flask import Blueprint, render_template, request, flash, redirect, url_for, session
 
-from .utils import get_token, create_spotify_oauth, check_authorised
+from .utils import create_spotify_oauth, check_authorised
 
 auth = Blueprint('auth', __name__)
 TOKEN_INFO = 'token_info'

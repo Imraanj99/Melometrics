@@ -3,15 +3,20 @@ import spotipy
 from spotipy import SpotifyOAuth
 import time
 
+# This function connects to the API, defines the requested scope and outlines the redirect address once the user has logged in
+
 def create_spotify_oauth():
     return SpotifyOAuth(
             client_id="8bde0ea3e6574d2199681fca5f885845",
             client_secret="75ad5e8dc0e941fc95d397b2214b11ed",
-            # will have to be changed. try find out why url for is not working here
+            # will have to be changed. try find out why url_for is not working here
             #redirect_uri='http://18.171.181.89/redir',
             redirect_uri='http://127.0.0.1:5001/redir',
             #redirect_uri=url_for('auth.redir', _external=True),
             scope="user-library-read playlist-read-private user-top-read playlist-modify-public playlist-modify-private") 
+
+# This function retrives the session token
+# It is able to check for an existing token, renew and expired token, or generate a new token
 
 def get_token():
     token_valid = False
@@ -33,6 +38,10 @@ def get_token():
 
     token_valid = True
     return token_info, token_valid
+
+# This token aims to verify if there is a token, and if it is still valid
+# This is used to ensure that only logged in members are able to access parts of the website where user data is manipulated or displayed
+# This redirects to the log in page if someone attempt to access something without the correct authorisation
 
 def check_authorised():
     session['token_info'], authorized = get_token()
