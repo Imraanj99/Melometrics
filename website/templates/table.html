@@ -10,6 +10,7 @@ document.addEventListener('DOMContentLoaded', function() {
     tables.forEach(function(table) {
         var headers = table.querySelectorAll('th');
         headers.forEach(function(header, columnIndex) {
+            header.style.textAlign = 'left';
             header.addEventListener('click', function() {
                 sortTable(table, columnIndex);
             });

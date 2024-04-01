@@ -56,3 +56,24 @@ def get_user():
     sp = spotipy.Spotify(auth=session.get('token_info').get('access_token'))
     return sp.current_user()
 
+def val_to_img(value):
+    if 0 <= value < 0.1:
+        return '<img src="path/to/0_image.png" width="20" data-value="${value} />'
+    elif 0.1 <= value < 0.2:
+        return '<img src="path/to/1_image.png" width="20" data-value="${value} />'
+    elif 0.2 <= value < 0.3:
+        return '<img src="path/to/2_image.png" width="20" data-value="${value} />'
+    elif 0.3 <= value < 0.4:
+        return '<img src="path/to/3_image.png" width="20" data-value="${value} />'
+    elif 0.4 <= value < 0.5:
+        return '<img src="path/to/4_image.png" width="20" data-value="${value} />'
+    elif 0.5 <= value < 0.6:
+        return '<img src="path/to/5_image.png" width="20" data-value="${value} />'
+    elif 0.6 <= value < 0.7:
+        return '<img src="path/to/6_image.png" width="20" data-value="${value} />'
+    elif 0.7 <= value < 0.8:
+        return '<img src="path/to/7_image.png" width="20" data-value="${value} />'
+    elif 0.8 <= value < 0.9:
+        return '<img src="path/to/8_image.png" width="20" data-value="${value} />'
+    else:
+        return '<img src="path/to/9_image.png" width="20" data-value="${value} />'

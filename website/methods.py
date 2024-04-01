@@ -56,8 +56,9 @@ def get_all_tracks():
     df2 = pd.DataFrame(features) 
     df1 = pd.DataFrame(identity, columns=["Song","Artists"])
     df0 = df1.join(df2)
+    df0.index = df0.index + 1
     df3 = df0.reset_index().rename(columns={'index': '#'})
-    df3.index = df3.index + 1
+    #df3.index = df3.index + 1
 
     # Trim df to remove unnecessary columns and modify column headers
     # Turn duration from milliseconds to seconds and minutes
