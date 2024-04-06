@@ -15,8 +15,19 @@ document.addEventListener('DOMContentLoaded', function() {
                 sortTable(table, columnIndex);
             });
         });
+        setColumnWidths(table, ['20px','1200px','800px','400px','400px','400px','400px','400px','400px','200px','200px',]);
     });
 });
+
+function setColumnWidths(table, widths) {
+    var headers = table.querySelectorAll('th');
+    headers.forEach(function(header, index) {
+        if (index < widths.length) { // Check to avoid out-of-bounds error
+            header.style.width = widths[index];
+        }
+    });
+}
+
 
 function sortTable(table, columnIndex) {
     var rows, switching, i, x, y, shouldSwitch, dir, switchcount = 0;
@@ -29,11 +40,14 @@ function sortTable(table, columnIndex) {
         // Loop through all rows except the first (header row):
         for (i = 1; i < (rows.length - 1); i++) {
             shouldSwitch = false;
-            x = rows[i].getElementsByTagName("td")[columnIndex];
-            y = rows[i + 1].getElementsByTagName("td")[columnIndex];
+            x = rows[i].getElementsByTagName("td")[columnIndex].querySelector("img").getAttribute("data-value");
+            y = rows[i + 1].getElementsByTagName("td")[columnIndex].querySelector("img").getAttribute("data-value");
             // Check if the two rows should switch place:
-            var xContent = isNaN(parseFloat(x.innerHTML)) ? x.innerHTML.toLowerCase() : parseFloat(x.innerHTML);
-            var yContent = isNaN(parseFloat(y.innerHTML)) ? y.innerHTML.toLowerCase() : parseFloat(y.innerHTML);
+            //var xContent = isNaN(parseFloat(x.innerHTML)) ? x.innerHTML.toLowerCase() : parseFloat(x.innerHTML);
+            //var yContent = isNaN(parseFloat(y.innerHTML)) ? y.innerHTML.toLowerCase() : parseFloat(y.innerHTML);
+            xContent = parseFloat(x);
+            yContent = parseFloat(y);
+
 
             if (dir == "asc") {
                 if (xContent > yContent) {

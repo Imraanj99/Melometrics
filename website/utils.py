@@ -2,6 +2,7 @@ from flask import session, redirect, url_for
 import spotipy
 from spotipy import SpotifyOAuth
 import time
+import numpy as np
 
 # This function connects to the API, defines the requested scope and outlines the redirect address once the user has logged in
 
@@ -58,22 +59,68 @@ def get_user():
 
 def val_to_img(value):
     if 0 <= value < 0.1:
-        return '<img src="path/to/0_image.png" width="20" data-value="${value} />'
+        return '<img src="path/to/0_image.png" width="20" data-value="${value}" />'
     elif 0.1 <= value < 0.2:
-        return '<img src="path/to/1_image.png" width="20" data-value="${value} />'
+        return '<img src="path/to/1_image.png" width="20" data-value="${value}" />'
     elif 0.2 <= value < 0.3:
-        return '<img src="path/to/2_image.png" width="20" data-value="${value} />'
+        return '<img src="path/to/2_image.png" width="20" data-value="${value}" />'
     elif 0.3 <= value < 0.4:
-        return '<img src="path/to/3_image.png" width="20" data-value="${value} />'
+        return '<img src="path/to/3_image.png" width="20" data-value="${value}" />'
     elif 0.4 <= value < 0.5:
-        return '<img src="path/to/4_image.png" width="20" data-value="${value} />'
+        return '<img src="path/to/4_image.png" width="20" data-value="${value}" />'
     elif 0.5 <= value < 0.6:
-        return '<img src="path/to/5_image.png" width="20" data-value="${value} />'
+        return '<img src="path/to/5_image.png" width="20" data-value="${value}" />'
     elif 0.6 <= value < 0.7:
-        return '<img src="path/to/6_image.png" width="20" data-value="${value} />'
+        return '<img src="path/to/6_image.png" width="20" data-value="${value}" />'
     elif 0.7 <= value < 0.8:
-        return '<img src="path/to/7_image.png" width="20" data-value="${value} />'
+        return '<img src="path/to/7_image.png" width="20" data-value="${value}" />'
     elif 0.8 <= value < 0.9:
-        return '<img src="path/to/8_image.png" width="20" data-value="${value} />'
+        return '<img src="path/to/8_image.png" width="20" data-value="${value}" />'
     else:
-        return '<img src="path/to/9_image.png" width="20" data-value="${value} />'
+        return '<img src="path/to/9_image.png" width="20" data-value="${value}" />'
+    
+    
+    
+def get_image_path(value):
+    # Ensure the value is within the acceptable range
+    if not 0 <= value <= 1:
+        #raise ValueError("Value must be between 0 and 1.")
+        return "value Error"
+
+        # List of tuples with (upper_bound, image_name)
+    '''
+    thresholds = [
+        (0.1, "1"),
+        (0.2, "2"),
+        (0.3, "3"),
+        (0.4, "4"),
+        (0.5, "5"),
+        (0.6, "6"),
+        (0.7, "7"),
+        (0.8, "8"),
+        (0.9, "9"),
+        (1, "10"),
+    ]
+
+    # Find the first threshold that is greater than the value
+    for upper_bound, image_name in thresholds:
+        if value <= upper_bound:
+            break
+
+    # Construct the image path using an f-string
+    image_path = f"/static/images/{'img_'+image_name}.png"
+
+    '''
+
+    thresholds = [x for x in np.arange(0,1,0.1)]
+
+    for upper_bound in thresholds:
+        if value <= upper_bound:
+            break
+
+    image_path = f"/static/images/{'img_'+str(int((upper_bound)*10))}.png"
+
+    return f'<img src="{image_path}" width="150" data-value="{value}" />'
+
+
+    

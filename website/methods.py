@@ -3,14 +3,14 @@ import datetime
 import spotipy
 import pandas as pd
 
-from .utils import get_token, check_authorised, get_user
+from .utils import get_token, check_authorised, get_user, get_image_path
 
 methods = Blueprint('methods', __name__)
 
 # this method returns a list the users liked songs (currently up to 150 due to restriction on number or requests to spotify api)
 # once cleared by spotify to leave developer mode, this can be expanded to return the full list of liked songs
 
-@methods.route('/getTracks')
+@methods.route('/get_tracks')
 def get_all_tracks():
 
     #check if session valid and user still logged in
@@ -44,7 +44,6 @@ def get_all_tracks():
             break
 
     # define a new array for audio features and populate by feeding in song IDs in batches of 50 (max size of input permitted by API)
-
     features = []
     for i in range(0,len(results),50):
         feature=sp.audio_features(results[i:i+50])
@@ -65,11 +64,13 @@ def get_all_tracks():
 
     df = df3.drop(['key','loudness','mode','liveness','type','id','uri','track_href','analysis_url','time_signature'],axis=1)
     df = df.rename(columns={'valence': 'Positivity', 'tempo': 'BPM','duration_ms':'Length'})
+    df['BPM'] = df['BPM'].astype(int)
     def ms_to_min_sec(milliseconds):
         seconds = int((milliseconds / 1000) % 60)
         minutes = int(milliseconds / (1000 * 60))
         return f"{minutes}:{seconds:02d}"
     df['Length'] = df['Length'].apply(ms_to_min_sec)
+    df[['danceability','energy','speechiness','acousticness','instrumentalness','Positivity']] = df[['danceability','energy','speechiness','acousticness','instrumentalness','Positivity']].applymap(get_image_path)
 
     # Output relevant information, convert df to html and redirect to table template
 
