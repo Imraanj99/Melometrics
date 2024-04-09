@@ -11,8 +11,8 @@ def create_spotify_oauth():
             client_id="8bde0ea3e6574d2199681fca5f885845",
             client_secret="75ad5e8dc0e941fc95d397b2214b11ed",
             # will have to be changed. try find out why url_for is not working here
-            #redirect_uri='http://18.171.181.89/redir',
-            redirect_uri='http://127.0.0.1:5001/redir',
+            redirect_uri='http://18.171.150.137/redir',
+            #redirect_uri='http://127.0.0.1:5001/redir',
             #redirect_uri=url_for('auth.redir', _external=True),
             scope="user-library-read playlist-read-private user-top-read playlist-modify-public playlist-modify-private user-read-private user-read-email") 
 
@@ -56,29 +56,6 @@ def check_authorised():
 def get_user():
     sp = spotipy.Spotify(auth=session.get('token_info').get('access_token'))
     return sp.current_user()
-
-def val_to_img(value):
-    if 0 <= value < 0.1:
-        return '<img src="path/to/0_image.png" width="20" data-value="${value}" />'
-    elif 0.1 <= value < 0.2:
-        return '<img src="path/to/1_image.png" width="20" data-value="${value}" />'
-    elif 0.2 <= value < 0.3:
-        return '<img src="path/to/2_image.png" width="20" data-value="${value}" />'
-    elif 0.3 <= value < 0.4:
-        return '<img src="path/to/3_image.png" width="20" data-value="${value}" />'
-    elif 0.4 <= value < 0.5:
-        return '<img src="path/to/4_image.png" width="20" data-value="${value}" />'
-    elif 0.5 <= value < 0.6:
-        return '<img src="path/to/5_image.png" width="20" data-value="${value}" />'
-    elif 0.6 <= value < 0.7:
-        return '<img src="path/to/6_image.png" width="20" data-value="${value}" />'
-    elif 0.7 <= value < 0.8:
-        return '<img src="path/to/7_image.png" width="20" data-value="${value}" />'
-    elif 0.8 <= value < 0.9:
-        return '<img src="path/to/8_image.png" width="20" data-value="${value}" />'
-    else:
-        return '<img src="path/to/9_image.png" width="20" data-value="${value}" />'
-    
     
     
 def get_image_path(value):
@@ -120,7 +97,7 @@ def get_image_path(value):
 
     image_path = f"/static/images/{'img_'+str(int((upper_bound)*10))}.png"
 
-    return f'<img src="{image_path}" width="150" data-value="{value}" />'
+    return f'<img src="{image_path}" width="120" data-value="{value}" />'
 
 
     
