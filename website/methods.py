@@ -129,6 +129,9 @@ def top_tracks_long():
     flash('Successfully retrieved your top 100 Tracks'+header, category='Success')
     return render_template('table2.html', table= df.to_html(classes='sortable', index=False, escape=False), title=header,)
 
+
+# in development
+
 @methods.route('/make_playlist', methods=["POST", "GET"])
 def make_playlist():
     session['token_info'], authorized = get_token()
@@ -174,6 +177,8 @@ def make_playlist():
     #sp.user_playlist_create()
     return render_template('playlist_form.html')
 
+# generates a list of users top tracks based on 3 time scales 
+
 def top_tracks(scale, length):
     sp = spotipy.Spotify(auth=session.get('token_info').get('access_token'))
     results = []
@@ -193,7 +198,6 @@ def top_tracks(scale, length):
     df = df1.reset_index().rename(columns={'index': '#'})
     return df
 
-#def add_tracks():
 
 def top_track_uris(scale, length):
     sp = spotipy.Spotify(auth=session.get('token_info').get('access_token'))

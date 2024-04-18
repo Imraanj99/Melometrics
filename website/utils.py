@@ -3,17 +3,17 @@ import spotipy
 from spotipy import SpotifyOAuth
 import time
 import numpy as np
+from secret_info import ClientID, ClientSecret
 
 # This function connects to the API, defines the requested scope and outlines the redirect address once the user has logged in
 
 def create_spotify_oauth():
     return SpotifyOAuth(
-            client_id="8bde0ea3e6574d2199681fca5f885845",
-            client_secret="75ad5e8dc0e941fc95d397b2214b11ed",
-            # will have to be changed. try find out why url_for is not working here
-            redirect_uri='http://18.171.150.137/redir',
-            #redirect_uri='http://127.0.0.1:5001/redir',
-            #redirect_uri=url_for('auth.redir', _external=True),
+            client_id= ClientID,
+            client_secret= ClientSecret,
+            #redirect_uri='http://18.171.150.137/redir',
+            #redirect_uri='http://127.0.0.1:5000/redir',
+            redirect_uri=url_for('auth.redir', _external=True),
             scope="user-library-read playlist-read-private user-top-read playlist-modify-public playlist-modify-private user-read-private user-read-email") 
 
 # This function retrives the session token
@@ -63,31 +63,8 @@ def get_image_path(value):
     if not 0 <= value <= 1:
         #raise ValueError("Value must be between 0 and 1.")
         return "value Error"
-
-        # List of tuples with (upper_bound, image_name)
-    '''
-    thresholds = [
-        (0.1, "1"),
-        (0.2, "2"),
-        (0.3, "3"),
-        (0.4, "4"),
-        (0.5, "5"),
-        (0.6, "6"),
-        (0.7, "7"),
-        (0.8, "8"),
-        (0.9, "9"),
-        (1, "10"),
-    ]
-
-    # Find the first threshold that is greater than the value
-    for upper_bound, image_name in thresholds:
-        if value <= upper_bound:
-            break
-
-    # Construct the image path using an f-string
-    image_path = f"/static/images/{'img_'+image_name}.png"
-
-    '''
+    
+    # define an array of which increments by 0.1 from 0-1 and then run each datapoint through it, assiging a specific f string corresponding to an image of 1-10 filled in dots to visually represent the datapoints between 0 and 1
 
     thresholds = [x for x in np.arange(0,1,0.1)]
 
@@ -96,6 +73,8 @@ def get_image_path(value):
             break
 
     image_path = f"/static/images/{'img_'+str(int((upper_bound)*10))}.png"
+
+    # return image while AND value, as value remains important for sorting reasons.
 
     return f'<img src="{image_path}" width="120" data-value="{value}" />'
 
