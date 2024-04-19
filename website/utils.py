@@ -4,6 +4,7 @@ from spotipy import SpotifyOAuth
 import time
 import numpy as np
 from secret_info import ClientID, ClientSecret
+import os
 
 # This function connects to the API, defines the requested scope and outlines the redirect address once the user has logged in
 
@@ -78,5 +79,9 @@ def get_image_path(value):
 
     return f'<img src="{image_path}" width="120" data-value="{value}" />'
 
-
+def clean_cache():
+    cache_file = '.cache'
+    print('clearing cache')
+    if os.path.exists(cache_file):
+        os.remove(cache_file)
     

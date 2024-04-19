@@ -1,6 +1,6 @@
 from flask import Blueprint, render_template, request, flash, redirect, url_for, session
 
-from .utils import create_spotify_oauth, check_authorised
+from .utils import create_spotify_oauth, check_authorised, clean_cache
 
 auth = Blueprint('auth', __name__)
 TOKEN_INFO = 'token_info'
@@ -9,6 +9,7 @@ TOKEN_INFO = 'token_info'
 
 @auth.route('/login')
 def login():
+    clean_cache()
     sp_oauth = create_spotify_oauth()
     auth_url = sp_oauth.get_authorize_url()
     return render_template('login.html', authorisation=auth_url)
