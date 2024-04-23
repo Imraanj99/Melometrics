@@ -15,7 +15,7 @@ def create_spotify_oauth():
             #redirect_uri='http://18.171.150.137/redir',
             #redirect_uri='http://127.0.0.1:5000/redir',
             redirect_uri=url_for('auth.redir', _external=True),
-            scope="user-library-read playlist-read-private user-top-read playlist-modify-public playlist-modify-private user-read-private user-read-email") 
+            scope="user-library-read playlist-read-private user-top-read playlist-modify-public playlist-modify-private user-read-private user-read-email ugc-image-upload") 
 
 # This function retrives the session token
 # It is able to check for an existing token, renew and expired token, or generate a new token

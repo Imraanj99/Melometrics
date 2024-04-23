@@ -22,3 +22,8 @@ def home():
 def about():
     session['token_info'], authorised = get_token()
     return render_template('about.html', token_valid=authorised)
+
+@views.route('feature_info')
+def feature_info():
+    session['token_info'], authorised = get_token()
+    return render_template('feature_info.html', token_valid=authorised)

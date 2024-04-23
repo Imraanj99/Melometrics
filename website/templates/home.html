@@ -1,14 +1,27 @@
 {% extends "base.html" %} {% block title %}Mellometrics{% endblock %}
 
 {% block content %}
+<br></br>
 <h1>Welcome To Melometrics, {{ name }}!</h1>
-
-<p> Melometrics is a application designed to enhance your spotify experience.  </p>
-
+<p> Melometrics is a application designed to enhance your spotify experience. We currently have 3 features up and running. </p>
+<h4>Liked Song Analysis</h4>
+<p>Do you find that you liked songs are unorganised and hard to search through? Well click here to see your liked songs ranked by 7 different metrics. 
+    These include BPM, energy, positivity, instrumentalness and more! This tool is perfect for satisfying you own curiosity or as an assistant when 
+    tryig to create new playlists!</p>
 <a href='get_tracks' class="btn btn-secondary" role="button" style="margin-top: 10px;">Liked Songs</a>
+<br></br>
+<h3>Top Tracks</h3>
+<p>Do you like knowing what your gmost played songs are but dont want to wait all year for your Spotify wrapped? Well click here to see your top 100 tracks over 3 different time scales! We even have the option of turning these tracks into a playlist for you!</p>
 <a href='top_tracks_medium' class="btn btn-secondary" role="button" style="margin-top: 10px;">Top Tracks</a>
+<br></br>
+<h3>Top Artists</h3>
+<p>Ever wondered who your most listened to artists are? Ever wondered who you'e been listening to recently, compared to who you've been listening to consistently for a while? Well click here to find out who you top artists are over 3 different lengths of time?</p>
 <a href='top_artists/short_term' class="btn btn-secondary" role="button" style="margin-top: 10px;">Top Artists</a>
-<a href='recomendations' class="btn btn-secondary" role="button" style="margin-top: 10px;">Recomendations (DEV)</a>
+<br></br>
+<h3>Recomendations Based on Artists (COMING SOON)</h3>
+<p>Have you ever had an artist you really liked, but struggled to find similar music? Click here to get music recommendations based on any of your favourite artists!</p>
+<p> Please be aware, this feature is still in development, so may not work at this time, but it will be ready soon</p>
+<a href='recommendations' class="btn btn-secondary" role="button" style="margin-top: 10px;">Recomendations (DEV)</a>
 
 
 {% endblock %}
