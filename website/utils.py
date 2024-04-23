@@ -1,4 +1,4 @@
-from flask import session, redirect, url_for
+from flask import session, url_for
 import spotipy
 from spotipy import SpotifyOAuth
 import time

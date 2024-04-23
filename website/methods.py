@@ -3,7 +3,7 @@ import datetime
 import spotipy
 import pandas as pd
 
-from .utils import get_token, check_authorised, get_user, get_image_path
+from .utils import get_token, get_image_path
 
 methods = Blueprint('methods', __name__)
 
@@ -90,11 +90,14 @@ def top_tracks_short():
         return redirect('/')
     scale = 'short_term'
     specific = "(Short term)"
-    df = top_tracks(scale, 100)
-    specific = "(Recent)"
-    header = "Top Tracks " + specific
-    flash('Successfully retrieved your top 100 Tracks'+header, category='Success')
-    return render_template('table2.html', table= df.to_html(classes='sortable', index=False, escape=False), title=header, token_valid=authorised)
+    df, success = top_tracks(scale, 100)
+    if success:
+        header = "Top Tracks " + specific
+        flash('Successfully retrieved your top 100 Tracks'+header, category='Success')
+        return render_template('top_tracks_table.html', table= df.to_html(classes='sortable', index=False, escape=False), title=header, token_valid=authorised)
+    else:
+        return redirect(url_for('views.home', _external=True))
+
 
 # This uses the get_tracks function to retrieve top tracks over a medium length of time 
 
@@ -106,11 +109,14 @@ def top_tracks_medium():
         return redirect('/')
     scale = 'medium_term'
     specific = "(Medium term)"
-    df = top_tracks(scale, 100)
-    specific = "(medium term)"
-    header = "Top Tracks " + specific
-    flash('Successfully retrieved your top 100 Tracks'+header, category='Success')
-    return render_template('table2.html', table= df.to_html(classes='sortable', index=False, escape=False), title=header, token_valid=authorised)
+    df, success = top_tracks(scale, 100)
+    if success:
+        header = "Top Tracks " + specific
+        flash('Successfully retrieved your top 100 Tracks'+header, category='Success')
+        return render_template('top_tracks_table.html', table= df.to_html(classes='sortable', index=False, escape=False), title=header, token_valid=authorised)
+    else:
+        return redirect(url_for('views.home', _external=True))
+
 
 
 # This uses the get_tracks function to retrieve top tracks over a long length of time 
@@ -124,13 +130,49 @@ def top_tracks_long():
 
     scale = 'long_term'
     specific = "(Long term)"
-    df = top_tracks(scale, 100)
-    header = "Top Tracks " + specific
-    flash('Successfully retrieved your top 100 Tracks'+header, category='Success')
-    return render_template('table2.html', table= df.to_html(classes='sortable', index=False, escape=False), title=header, token_valid=authorised)
+    df, success = top_tracks(scale, 100)
+    if success:
+        header = "Top Tracks " + specific
+        flash('Successfully retrieved your top 100 Tracks'+header, category='Success')
+        return render_template('top_tracks_table.html', table= df.to_html(classes='sortable', index=False, escape=False), title=header, token_valid=authorised)
+    else:
+        return redirect(url_for('views.home', _external=True))
+    
+
+# come back to this
+
+@methods.route('/top_artists/<input_value>')
+def top_artists(input_value):
+    session['token_info'], authorised = get_token()
+    session.modified = True
+    if not authorised:
+        return redirect('/')
+    
+    ranges = {'short_term':'Short Term', 'medium_term':'Medium Term', 'long_term':'Long Term'}
+    if input_value not in ranges:
+        flash('No such URL exists', category='failure')
+        return redirect('/')
+    
+    sp = spotipy.Spotify(auth=session.get('token_info').get('access_token'))
+    results = []
+    header = 'Top artists (' + ranges[input_value] + ')'
+
+    top_artist = sp.current_user_top_artists(limit=50, offset=0,time_range=input_value)["items"]
+    size = len(top_artist)
+    if size == 0:
+        flash('Insufficient listening data to create top artists', category='failure')
+        return redirect('/')
+    for item in top_artist:
+        results += [item["name"]]
+    print(len(results))
+    df = pd.DataFrame(results, columns=["Artists"])
+    df.index = df.index + 1
+    df = df.reset_index().rename(columns={'index': '#'})
+    flash('Top artists retrieved', category='success')
+    return render_template('top_artist_table.html', table= df.to_html(classes='sortable', index=False, escape=False), title=header, token_valid=authorised, number=size)
 
 
-# in development
+
 
 @methods.route('/make_playlist', methods=["POST", "GET"])
 def make_playlist():
@@ -161,24 +203,14 @@ def make_playlist():
         uris = top_track_uris(scale, length)
         print(len(uris))
         
-        '''
-        for i in range(0,len(uris),50):
-            sp.user_playlist_add_tracks(user=user_id, playlist_id=new_playlist_id, tracks=uris[i:i+50], position="None")
         
-        '''
-
-        #sp.user_playlist_add_tracks(user=user_id, playlist_id=new_playlist_id, tracks=uris[0], position="None")    
+        for i in range(0,len(uris),50):
+            sp.playlist_add_items(new_playlist_id, uris[i:i+50])
+        
         
         flash('Successfully created playlist', category='Success')
-        return render_template('home.html', token_valid=authorised)
+        return redirect(url_for('views.home'))
 
-    #get user ID
-    #offer to make playlist 
-    #show options
-    #allow name choice
-    # make playlist 
-    # add tracks
-    #sp.user_playlist_create()
     return render_template('playlist_form.html', token_valid=authorised)
 
 # generates a list of users top tracks based on 3 time scales 
@@ -187,20 +219,28 @@ def top_tracks(scale, length):
     sp = spotipy.Spotify(auth=session.get('token_info').get('access_token'))
     results = []
     iter = 0
+    success = True
+
     while True:
         offset = iter * 50
         iter += 1
         top_tracks = sp.current_user_top_tracks(limit=50, offset=offset,time_range=scale)["items"]
+        if not top_tracks:
+            flash('Insufficient listening data to create top tracks', category='failure')
+            success = False
+            break
         for item in top_tracks:
             val = [item["name"]]
             val.append(item["artists"][0]["name"])
             results += [val]
+            if len(results) >= int(length):
+                break
         if (len(results)>(int(length)-1)):
             break  
     df1 = pd.DataFrame(results, columns=["Song","Artists"])
     df1.index = df1.index + 1
     df = df1.reset_index().rename(columns={'index': '#'})
-    return df
+    return df, success
 
 
 def top_track_uris(scale, length):

@@ -1,15 +1,26 @@
-{% extends "base.html" %} {% block title %}Top Tracks{% endblock %}
+{% extends "base.html" %} {% block title %}Top Artists{% endblock %}
 
 {% block content %}
 <h2>{{ title }}</h2>
+<p> See your top {{ number }} Artists </p>
 
-<a href='top_tracks_short' class="btn btn-secondary" role="button" style="margin-top: 10px; background-color: #333538;">Recent</a>
-<a href='top_tracks_medium' class="btn btn-secondary" role="button" style="margin-top: 10px; background-color: #232529;">Medium Term</a>
-<a href='top_tracks_long' class="btn btn-secondary" role="button" style="margin-top: 10px; background-color: #545658;">Long Term</a>
-<a href='make_playlist' class="btn btn-secondary" role="button" style="margin-top: 10px; background-color: #363733;">Make Playlist</a>
+<label for="scale">Choose length of data:</label>
+<br></br>
+            <div class="btn-group btn-group-toggle" data-toggle="buttons">
+                <label class="btn btn-secondary active mr-4">
+                    <input type="radio" name="selected_value" value="short_term" id="short" autocomplete="off" onchange="changeRoute(this.value)"> Short Term
+                </label>
+                <label class="btn btn-secondary mr-4">
+                    <input type="radio" name="selected_value" value="medium_term" id="medium" autocomplete="off" onchange="changeRoute(this.value)"> Medium Term
+                </label>
+                <label class="btn btn-secondary">
+                    <input type="radio" name="selected_value" value="long_term" id="long" autocomplete="off" onchange="changeRoute(this.value)"> Long Term
+                </label>
+            </div>
+            
 
-
-
+<script src="/static/javascript_files/route_change.js"></script>
+<br></br>
 {{ table|safe }}
 
 <script>

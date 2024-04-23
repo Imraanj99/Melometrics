@@ -1,5 +1,4 @@
 from flask import Blueprint, session, redirect, url_for, flash, render_template
-import spotipy
 
 from .utils import get_token, get_user
 
@@ -11,7 +10,6 @@ views = Blueprint('views', __name__)
 def home():
     session['token_info'], authorised = get_token()
     session.modified = True
-    print(authorised)
     if not authorised:
         flash('Please log in', category='failure')
         return redirect(url_for('auth.login'))
