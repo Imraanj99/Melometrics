@@ -3,3 +3,4 @@ __pycache__/
 .cache
 songs.csv
 test_data
+secret_info.py
