@@ -95,7 +95,7 @@ def top_tracks_short():
     df, success = top_tracks(scale, 100)
     if success:
         header = "Top Tracks " + specific
-        flash('Successfully retrieved your top 100 Tracks'+header, category='Success')
+        flash('Successfully retrieved your top 100 Tracks '+ specific, category='Success')
         return render_template('top_tracks_table.html', table= df.to_html(classes='sortable', index=False, escape=False), title=header, token_valid=authorised)
     else:
         return redirect(url_for('views.home', _external=True))
@@ -114,7 +114,7 @@ def top_tracks_medium():
     df, success = top_tracks(scale, 100)
     if success:
         header = "Top Tracks " + specific
-        flash('Successfully retrieved your top 100 Tracks'+header, category='Success')
+        flash('Successfully retrieved your top 100 Tracks '+ specific, category='Success')
         return render_template('top_tracks_table.html', table= df.to_html(classes='sortable', index=False, escape=False), title=header, token_valid=authorised)
     else:
         return redirect(url_for('views.home', _external=True))
@@ -135,7 +135,7 @@ def top_tracks_long():
     df, success = top_tracks(scale, 100)
     if success:
         header = "Top Tracks " + specific
-        flash('Successfully retrieved your top 100 Tracks'+header, category='Success')
+        flash('Successfully retrieved your top 100 Tracks '+ specific, category='Success')
         return render_template('top_tracks_table.html', table= df.to_html(classes='sortable', index=False, escape=False), title=header, token_valid=authorised)
     else:
         return redirect(url_for('views.home', _external=True))
