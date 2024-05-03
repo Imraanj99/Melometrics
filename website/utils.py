@@ -13,9 +13,9 @@ def create_spotify_oauth():
             client_id= ClientID,
             client_secret= ClientSecret,
             #redirect_uri='http://18.171.150.137/redir',
-            redirect_uri='http://www.melometrics.co.uk/redir',
+            #redirect_uri='http://www.melometrics.co.uk/redir',
             #redirect_uri='http://127.0.0.1:5000/redir',
-            #redirect_uri=url_for('auth.redir', _external=True),
+            redirect_uri=url_for('auth.redir', _external=True),
             scope="user-library-read playlist-read-private user-top-read playlist-modify-public playlist-modify-private user-read-private user-read-email ugc-image-upload") 
 
 # This function retrives the session token

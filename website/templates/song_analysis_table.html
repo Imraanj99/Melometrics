@@ -41,13 +41,29 @@ function sortTable(table, columnIndex) {
         // Loop through all rows except the first (header row):
         for (i = 1; i < (rows.length - 1); i++) {
             shouldSwitch = false;
-            x = rows[i].getElementsByTagName("td")[columnIndex].querySelector("img").getAttribute("data-value");
-            y = rows[i + 1].getElementsByTagName("td")[columnIndex].querySelector("img").getAttribute("data-value");
+            //x = rows[i].getElementsByTagName("td")[columnIndex].querySelector("img").getAttribute("data-value");
+            //y = rows[i + 1].getElementsByTagName("td")[columnIndex].querySelector("img").getAttribute("data-value");
             // Check if the two rows should switch place:
             //var xContent = isNaN(parseFloat(x.innerHTML)) ? x.innerHTML.toLowerCase() : parseFloat(x.innerHTML);
             //var yContent = isNaN(parseFloat(y.innerHTML)) ? y.innerHTML.toLowerCase() : parseFloat(y.innerHTML);
-            xContent = parseFloat(x);
-            yContent = parseFloat(y);
+            //xContent = parseFloat(x);
+            //yContent = parseFloat(y);
+            var xCell = rows[i].getElementsByTagName("td")[columnIndex];
+            var yCell = rows[i + 1].getElementsByTagName("td")[columnIndex];
+            var imgX = xCell.querySelector("img");
+            var imgY = yCell.querySelector("img");
+
+            x = imgX ? imgX.getAttribute("data-value") : xCell.textContent;
+            y = imgY ? imgY.getAttribute("data-value") : yCell.textContent;
+
+            // Attempt to parse the content as numbers, fall back to string comparison if NaN
+            var xContent = parseFloat(x);
+            var yContent = parseFloat(y);
+
+            if (isNaN(xContent) || isNaN(yContent)) {
+                xContent = x.toLowerCase();
+                yContent = y.toLowerCase();
+            }
 
 
             if (dir == "asc") {
