@@ -1,0 +1,71 @@
+{% extends "test_templates/test_base.html" %}
+
+{% block title %}Playlist Configuration{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-4">
+        <h2 class="text-center mb-4"> Playlist Details </h2><!-- Header -->
+        <p class="text-center mb-4"> Please select your preferred settings </p>
+        <p class="text-center mb-4"> Please note, this will not create a playlist due to not being signed in. Clicking create will redirect to an screenshot of an example of a playlist made</p>
+
+        <!-- Begin form -->
+        <form method="post">
+            <div class="form-group">
+                <label for="playlist_name">Playlist Name</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  id="playlist_name"
+                  name="playlist_name"
+                  placeholder="Enter Playlist name"
+                />
+            </div>
+            <label for="scale">Choose length of data</label>
+            <div class="btn-group btn-group-toggle" data-toggle="buttons">
+                <label class="btn btn-secondary active mr-4">
+                    <input type="radio" name="selected_value" value="short_term" id="short" autocomplete="off" checked> Short Term
+                </label>
+                <label class="btn btn-secondary mr-4">
+                    <input type="radio" name="selected_value" value="medium_term" id="medium" autocomplete="off"> Medium Term
+                </label>
+                <label class="btn btn-secondary">
+                    <input type="radio" name="selected_value" value="long_term" id="long" autocomplete="off"> Long Term
+                </label>
+            </div>
+            <br><br>
+            <label for="scale">Choose length of Playlist</label>
+            <div class="text-center">
+                <div class="btn-group btn-group-toggle" data-toggle="buttons">
+                    <label class="btn btn-secondary active mr-4">
+                        <input type="radio" name="number_of_songs" value="50" id="50" autocomplete="off" checked> 50
+                    </label>
+                    <label class="btn btn-secondary mr-4">
+                        <input type="radio" name="number_of_songs" value="100" id="100" autocomplete="off"> 100
+                    </label>
+                    <label class="btn btn-secondary mr-4">
+                        <input type="radio" name="number_of_songs" value="150" id="150" autocomplete="off"> 150
+                    </label>
+                    <label class="btn btn-secondary mr-4">
+                        <input type="radio" name="number_of_songs" value="200" id="200" autocomplete="off"> 200
+                    </label>
+                    <label class="btn btn-secondary">
+                        <input type="radio" name="number_of_songs" value="250" id="250" autocomplete="off"> 250
+                    </label>
+                </div>
+            </div>  
+            <br><br>
+            <div class="text-center">
+                <a href='test/home' class="btn btn-secondary" role="button" style="margin-top: 10px;">Create Playlist</a>
+            </div>
+        </form>
+        <!-- End form -->
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+{% endblock %}

@@ -12,7 +12,8 @@ def create_app():
     from .methods import methods
     from .views import views
     from .recommendations import recommendations
-
+    from .test_routes.test import tester
+    
     # route for the test account as it does not have 1 year of data from which to generate top tracks
     from .top_track_tester import top_track_tester
 
@@ -21,6 +22,7 @@ def create_app():
     app.register_blueprint(views, url_prefix='/')
     app.register_blueprint(top_track_tester, url_prefix='/')
     app.register_blueprint(recommendations, url_prefix='/')
+    app.register_blueprint(tester, url_prefix='/test')
     
     return app
 

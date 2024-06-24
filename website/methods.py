@@ -4,7 +4,7 @@ import spotipy
 import pandas as pd
 import base64
 
-from .utils import get_token, get_image_path
+from .utils import get_token, get_image_path, get_audio_features
 from secret_info import encoded_logo
 
 methods = Blueprint('methods', __name__)
@@ -44,7 +44,15 @@ def get_all_tracks():
             break
         if (len(results)>100):
             break
+    
+    df = get_audio_features(results, sp)
+     
+    df1 = pd.DataFrame(identity, columns=["Song","Artists"])
+    df = df1.join(df)
+    df.index = df.index + 1
+    df = df.reset_index().rename(columns={'index': '#'})
 
+    '''
     # define a new array for audio features and populate by feeding in song IDs in batches of 50 (max size of input permitted by API)
     features = []
     for i in range(0,len(results),50):
@@ -73,13 +81,13 @@ def get_all_tracks():
         return f"{minutes}:{seconds:02d}"
     df['Length'] = df['Length'].apply(ms_to_min_sec)
     df[['danceability','energy','speechiness','acousticness','instrumentalness','Positivity']] = df[['danceability','energy','speechiness','acousticness','instrumentalness','Positivity']].applymap(get_image_path)
-
+    '''
     # Output relevant information, convert df to html and redirect to table template
     size = len(df)
-    #df.to_csv('songs.csv', index=False)
+    #df.to_csv('songs_test.csv', index=False)
     header = "Liked songs"
     flash('Tracks retrieved successfully', category='success')
-    return render_template('song_analysis_table.html', table= df.to_html(classes='sortable', index=False, escape=False), title=header, token_valid=authorised, number=size)
+    return render_template('tables/song_analysis_table.html', table= df.to_html(classes='sortable', index=False, escape=False), title=header, token_valid=authorised, number=size)
     #return redirect(url_for('auth.home', _external=True))
 
 # This uses the get_tracks function to retrieve top tracks over a short length of time 
@@ -96,7 +104,7 @@ def top_tracks_short():
     if success:
         header = "Top Tracks " + specific
         flash('Successfully retrieved your top 100 Tracks '+ specific, category='Success')
-        return render_template('top_tracks_table.html', table= df.to_html(classes='sortable', index=False, escape=False), title=header, token_valid=authorised)
+        return render_template('tables/top_tracks_table.html', table= df.to_html(classes='sortable', index=False, escape=False), title=header, token_valid=authorised)
     else:
         return redirect(url_for('views.home', _external=True))
 
@@ -115,7 +123,7 @@ def top_tracks_medium():
     if success:
         header = "Top Tracks " + specific
         flash('Successfully retrieved your top 100 Tracks '+ specific, category='Success')
-        return render_template('top_tracks_table.html', table= df.to_html(classes='sortable', index=False, escape=False), title=header, token_valid=authorised)
+        return render_template('tables/top_tracks_table.html', table= df.to_html(classes='sortable', index=False, escape=False), title=header, token_valid=authorised)
     else:
         return redirect(url_for('views.home', _external=True))
 
@@ -136,7 +144,7 @@ def top_tracks_long():
     if success:
         header = "Top Tracks " + specific
         flash('Successfully retrieved your top 100 Tracks '+ specific, category='Success')
-        return render_template('top_tracks_table.html', table= df.to_html(classes='sortable', index=False, escape=False), title=header, token_valid=authorised)
+        return render_template('tables/top_tracks_table.html', table= df.to_html(classes='sortable', index=False, escape=False), title=header, token_valid=authorised)
     else:
         return redirect(url_for('views.home', _external=True))
     
@@ -171,7 +179,35 @@ def top_artists(input_value):
     df.index = df.index + 1
     df = df.reset_index().rename(columns={'index': '#'})
     flash('Top artists retrieved', category='success')
-    return render_template('top_artist_table.html', table= df.to_html(classes='sortable', index=False, escape=False), title=header, token_valid=authorised, number=size)
+    return render_template('tables/top_artist_table.html', table= df.to_html(classes='sortable', index=False, escape=False), title=header, token_valid=authorised, number=size)
+
+
+@methods.route('/top_track_features/<input_value>')
+def top_track_features(input_value):
+    session['token_info'], authorised = get_token()
+    session.modified = True
+    if not authorised:
+        return redirect('/')
+    
+    ranges = {'short_term':'Short Term', 'medium_term':'Medium Term', 'long_term':'Long Term'}
+    if input_value not in ranges:
+        flash('No such URL exists', category='failure')
+        return redirect('/')
+    
+    sp = spotipy.Spotify(auth=session.get('token_info').get('access_token'))
+    header = 'Top Track Features (' + ranges[input_value] + ')'
+
+    uris = top_track_uris(input_value, 100)
+    songs, success = top_tracks(input_value, 100)
+    if not success:
+        return redirect(url_for('methods.get_tracks', _external=True))
+    df1 = get_audio_features(uris, sp)
+    df = pd.DataFrame(songs)
+    df = df.join(df1)
+    size = len(df)
+    flash('Track features retrieved successfully', category='success')
+    return render_template('tables/top_track_features_table.html', table= df.to_html(classes='sortable', index=False, escape=False), title=header, token_valid=authorised, number=size)
+
 
 
 
@@ -197,7 +233,7 @@ def make_playlist():
         
         if len(name) > 100:
             flash('Playlist name must be less than 100 characters long', category='failure')
-            return render_template('playlist_form.html')
+            return render_template('forms/playlist_form.html')
     
         new_playlist = sp.user_playlist_create(user_id, name, public=True, collaborative=False, description='A playlist of your top tracks, generated by Melometrics')
         new_playlist_id = new_playlist["id"]
@@ -213,7 +249,7 @@ def make_playlist():
         flash('Successfully created playlist', category='Success')
         return redirect(url_for('views.home'))
 
-    return render_template('playlist_form.html', token_valid=authorised)
+    return render_template('forms/playlist_form.html', token_valid=authorised)
 
 # generates a list of users top tracks based on 3 time scales 
 

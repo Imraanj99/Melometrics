@@ -15,7 +15,7 @@ def top_test_short():
     header = "Top Tracks " + specific
     df = pd.read_csv('test_data/short_test.csv')
     flash('Successfully retrieved your top 100 Tracks '+ specific, category='Success')
-    return render_template('top_test_table.html', table= df.to_html(classes='sortable', index=False, escape=False), title=header, token_valid=authorised)
+    return render_template('tables/top_test_table.html', table= df.to_html(classes='sortable', index=False, escape=False), title=header, token_valid=authorised)
 
 @top_track_tester.route('/top_test_medium')
 def top_test_medium():
@@ -27,7 +27,7 @@ def top_test_medium():
     header = "Top Tracks " + specific
     df = pd.read_csv('test_data/medium_test.csv')
     flash('Successfully retrieved your top 100 Tracks '+ specific, category='Success')
-    return render_template('top_test_table.html', table= df.to_html(classes='sortable', index=False, escape=False), title=header, token_valid=authorised)
+    return render_template('tables/top_test_table.html', table= df.to_html(classes='sortable', index=False, escape=False), title=header, token_valid=authorised)
 
 @top_track_tester.route('/top_test_long')
 def top_test_long():
@@ -39,5 +39,5 @@ def top_test_long():
     header = "Top Tracks " + specific
     df = pd.read_csv('test_data/long_test.csv')
     flash('Successfully retrieved your top 100 Tracks '+ specific, category='Success')
-    return render_template('top_test_table.html', table= df.to_html(classes='sortable', index=False, escape=False), title=header, token_valid=authorised)
+    return render_template('tables/top_test_table.html', table= df.to_html(classes='sortable', index=False, escape=False), title=header, token_valid=authorised)
 

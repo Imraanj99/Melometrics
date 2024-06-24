@@ -1,0 +1,82 @@
+{% extends "base.html" %} {% block title %}Top Tracks{% endblock %}
+
+{% block content %}
+<h2>{{ title }}</h2>
+<p> See your top 100 tracks in the short, medium or long term! </p>
+
+<a href='top_tracks_short' class="btn btn-secondary" role="button" style="margin-top: 10px; background-color: #545658;">Recent</a>
+<a href='top_tracks_medium' class="btn btn-secondary" role="button" style="margin-top: 10px; background-color: #545658;">Medium Term</a>
+<a href='top_tracks_long' class="btn btn-secondary" role="button" style="margin-top: 10px; background-color: #545658;">Long Term</a>
+<br></br>
+<p> If you are using the test </p>
+<a href='top_test_short' class="btn btn-secondary" role="button" style="margin-top: 10px; background-color: #545658;">Short test</a>
+<a href='top_test_medium' class="btn btn-secondary" role="button" style="margin-top: 10px; background-color: #545658;">Medium Test</a>
+<a href='top_test_long' class="btn btn-secondary" role="button" style="margin-top: 10px; background-color: #545658;">Long test</a>
+<br></br>
+<p> View the audio features of your top tracks, or turn them into a playlist! </p>
+<a href='top_track_features/short_term' class="btn btn-secondary" role="button" style="margin-top: 10px; background-color: #545658;">Audio Features</a>
+<a href='make_playlist' class="btn btn-secondary" role="button" style="margin-top: 10px; background-color: #545658;">Make Playlist</a>
+<br></br>
+
+
+{{ table|safe }}
+
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    var tables = document.querySelectorAll('.sortable');
+    tables.forEach(function(table) {
+        var headers = table.querySelectorAll('th');
+        headers.forEach(function(header, columnIndex) {
+            header.style.textAlign = 'left';
+            header.addEventListener('click', function() {
+                sortTable(table, columnIndex);
+            });
+        });
+    });
+});
+
+function sortTable(table, columnIndex) {
+    var rows, switching, i, x, y, shouldSwitch, dir, switchcount = 0;
+    switching = true;
+    // Set the sorting direction to ascending:
+    dir = "asc";
+    while (switching) {
+        switching = false;
+        rows = table.getElementsByTagName("tr");
+        // Loop through all rows except the first (header row):
+        for (i = 1; i < (rows.length - 1); i++) {
+            shouldSwitch = false;
+            x = rows[i].getElementsByTagName("td")[columnIndex];
+            y = rows[i + 1].getElementsByTagName("td")[columnIndex];
+            // Check if the two rows should switch place:
+            var xContent = isNaN(parseFloat(x.innerHTML)) ? x.innerHTML.toLowerCase() : parseFloat(x.innerHTML);
+            var yContent = isNaN(parseFloat(y.innerHTML)) ? y.innerHTML.toLowerCase() : parseFloat(y.innerHTML);
+
+            if (dir == "asc") {
+                if (xContent > yContent) {
+                    shouldSwitch = true;
+                    break;
+                }
+            } else if (dir == "desc") {
+                if (xContent < yContent) {
+                    shouldSwitch = true;
+                    break;
+                }
+            }
+        }
+        if (shouldSwitch) {
+            rows[i].parentNode.insertBefore(rows[i + 1], rows[i]);
+            switching = true;
+            switchcount++;
+        } else {
+            if (switchcount == 0 && dir == "asc") {
+                dir = "desc";
+                switching = true;
+            }
+        }
+    }
+}
+</script>
+
+{% endblock %}

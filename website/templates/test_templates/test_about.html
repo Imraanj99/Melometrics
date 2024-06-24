@@ -1,0 +1,27 @@
+{% extends "test_templates/test_base.html" %} {% block title %}About{% endblock %}
+{% block content %}
+<br></br>
+<h1>About Melometrics</h1>
+<br></br>
+<h3>Creator</h3>
+<p>Hello, my name is Imraan, and I am the creator of Melometrics. I earned my degree in Physics and Philosophy from the University of Bristol 
+    and have since decided to pursue a career in coding.</p>
+<p>I developed this app as part of a practical project aimed at sharpening my coding skills and gaining familiarity with web development.
+ I chose this particular idea because of my passion for music and my curiosity about my listening habits and preferences. This project presented
+  the perfect blend of personal interest and challenging new experiences, driving me to become a more versatile coder.</p>
+<h3>The Motivation</h3>
+<p>Melometrics is a Flask application hosted on an EC2 AWS Ubuntu instance. Server-side operations are managed using the Gunicorn and Nginx packages.
+ The application leverages the Spotipy Python module for interfacing with the Spotify API. The frontend is primarily developed in HTML and CSS, 
+ incorporating JavaScript for dynamic table management and additional functionalities.</p>
+<p>Although this project is still a work in progress, it has provided me with an incredible learning experience. Overcoming the numerous challenges
+     along the way has significantly enhanced my understanding in various areas. The source code for this site is available on my GitHub page, which 
+     you can access <a href="https://github.com/Imraanj99/Melometrics">here</a>.</p>
+<h3>Current Problems</h3>
+<p>Currently, the only significant issue is that the API remains in "developer mode." This restricts the volume of requests, but more importantly, 
+    restricts the OAuth access solely to users whom I have explicitly authorized in the API settings. I have requested an upgrade to "extended quota 
+    mode," although the approval process may take some time.</p>
+<p>As a workaround, I could create a new account and share its details with users interested in testing the app's functionality. However, this 
+    solution is not ideal because two key features—top tracks and top artists—require between four weeks and one year of listening data to function 
+    properly. Consequently, a new Spotify account would not support these features immediately. To address this, I have prepared backup data to use 
+    under these circumstances.</p>
+{% endblock %}

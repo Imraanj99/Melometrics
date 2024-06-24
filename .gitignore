@@ -4,3 +4,5 @@ __pycache__/
 songs.csv
 test_data
 secret_info.py
+#website/test_routes
+#website/templates/test_templates

@@ -5,6 +5,7 @@ import time
 import numpy as np
 from secret_info import ClientID, ClientSecret
 import os
+import pandas as pd
 
 # This function connects to the API, defines the requested scope and outlines the redirect address once the user has logged in
 
@@ -79,6 +80,37 @@ def get_image_path(value):
     # return image while AND value, as value remains important for sorting reasons.
 
     return f'<img src="{image_path}" width="120" data-value="{value}" />'
+
+def get_audio_features(results, sp):
+    features = []
+    #sp  = spotipy.Spotify(auth=session.get('token_info').get('access_token'))
+    for i in range(0,len(results),50):
+        feature=sp.audio_features(results[i:i+50])
+        features += feature
+    # Create a dataframe for the featues and song/artist info and combine
+    # Create a seperate column for the indexes in the dataframe and shift this to begin at 1 instead of 0
+    '''
+    df2 = pd.DataFrame(features) 
+    df1 = pd.DataFrame(identity, columns=["Song","Artists"])
+    df0 = df1.join(df2)
+    df0.index = df0.index + 1
+    df3 = df0.reset_index().rename(columns={'index': '#'})
+    #df3.index = df3.index + 1
+    '''
+    # Trim df to remove unnecessary columns and modify column headers
+    # Turn duration from milliseconds to seconds and minutes
+    df = pd.DataFrame(features)
+    df = df.drop(['key','loudness','mode','liveness','type','id','uri','track_href','analysis_url','time_signature'],axis=1)
+    df = df.rename(columns={'valence': 'Positivity', 'tempo': 'BPM','duration_ms':'Length'})
+    df['BPM'] = df['BPM'].astype(int)
+    def ms_to_min_sec(milliseconds):
+        seconds = int((milliseconds / 1000) % 60)
+        minutes = int(milliseconds / (1000 * 60))
+        return f"{minutes}:{seconds:02d}"
+    df['Length'] = df['Length'].apply(ms_to_min_sec)
+    print(df)
+    df[['danceability','energy','speechiness','acousticness','instrumentalness','Positivity']] = df[['danceability','energy','speechiness','acousticness','instrumentalness','Positivity']].applymap(get_image_path)
+    return df 
 
 def clean_cache():
     cache_file = '.cache'
